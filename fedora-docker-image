@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -e
+
+podman build \
+  --build-arg BASE_IMAGE=fedora \
+  --build-arg PKG_MANAGER=dnf \
+  --build-arg PKGS="\
+        attr \
+        autoconf \
+        automake \
+        autopoint \
+        bison \
+        btrfs-progs \
+        cpio \
+        cryptsetup \
+        dosfstools \
+        e2fsprogs \
+        edk2-ovmf \
+        edk2-ovmf-ia32 \
+        erofs-utils \
+        exfatprogs \
+        f2fs-tools \
+        flex \
+        gawk \
+        genromfs \
+        gettext \
+        git \
+        hfsplus-tools \
+        jfsutils \
+        libtool \
+        lzop \
+        make \
+        mtools \
+        nilfs-utils \
+        ntfsprogs \
+        parted \
+        patch \
+        pkg-config \
+        python3 \
+        qemu-system-arm \
+        qemu-system-aarch64 \
+        qemu-system-riscv \
+        qemu-system-x86 \
+	rsync \
+        squashfs-tools \
+        swtpm-tools \
+        texinfo \
+	texinfo-tex \
+        texlive \
+        tpm2-tools \
+        udftools \
+        unifont \
+        unifont-fonts \
+        which \
+        words \
+        xfsprogs \
+        xorriso \
+        zfs-fuse" \
+  -t fedora-grub .
+
+podman run -it fedora-grub

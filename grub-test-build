@@ -1,0 +1,70 @@
+#!/bin/sh -e
+
+if [ -n $DEBUG ]; then
+   DEBUG=echo
+fi
+
+CROSS_C=/usr/local/lib/gcc-12.2.0-nolibc
+
+PATH="$CROSS_C/ia64-linux/bin:$CROSS_C/loongarch64-linux/bin:$CROSS_C/riscv32-linux/bin:$PATH"
+
+: ${CPUS:=$(getconf _NPROCESSORS_ONLN 2> /dev/null || echo 1)}
+CPUS=$(if [ "$CPUS" -gt 1 ]; then expr "$CPUS" + 1; else echo 1; fi)
+
+TARGETS='aarch64-linux-gnu arm-linux-gnueabihf i386 ia64-linux loongarch64-linux mips-linux-gnu
+	 mipsel-linux-gnu powerpc64-linux-gnu riscv32-linux riscv64-linux-gnu sparc64-linux-gnu x86_64'
+
+aarch64_linux_gnu_PLATFORMS=efi
+arm_linux_gnueabihf_PLATFORMS='coreboot efi uboot'
+i386_PLATFORMS='coreboot efi ieee1275 multiboot pc qemu xen xen_pvh'
+ia64_linux_PLATFORMS=efi
+loongarch64_linux_PLATFORMS=efi
+mips_linux_gnu_PLATFORMS='arc qemu_mips'
+mipsel_linux_gnu_PLATFORMS='arc loongson qemu_mips'
+powerpc64_linux_gnu_PLATFORMS=ieee1275
+riscv32_linux_PLATFORMS=efi
+riscv64_linux_gnu_PLATFORMS=efi
+sparc64_linux_gnu_PLATFORMS=ieee1275
+x86_64_PLATFORMS='efi emu xen'
+
+#
+# Missing non-x86_64 emu platforms builds due to lack of native/host build tools.
+# Potentially it can be done on Debian. Though I think it does not make a lot
+# of sense supporting all emu targets, e.g., I would at least remove completely
+# i386 emu build support from GRUB source.
+#
+
+if [ -f ./configure ]; then
+  $DEBUG make -j "$CPUS" distclean || :
+else
+  $DEBUG ./bootstrap
+fi
+
+for i in $TARGETS; do
+  P=$(echo "$i" | tr - _)
+  eval P="\"\$${P}_PLATFORMS\""
+  for j in $P; do
+    if [ "$j" = efi ] && [ "$i" != ia64-linux ] && [ "$i" != loongarch64-linux ] && [ "$i" != riscv64-linux-gnu ]; then
+      $DEBUG ./configure --target="$i" --with-platform="$j" --enable-stack-protector --enable-grub-mkfont --prefix="$(pwd)/grub-dist"
+    else
+      $DEBUG ./configure --target="$i" --with-platform="$j" --enable-grub-mkfont --prefix="$(pwd)/grub-dist"
+    fi
+    $DEBUG make -j "$CPUS" install
+    $DEBUG make -j "$CPUS" distclean
+  done
+done
+
+$DEBUG ./configure --build=x86_64-linux-gnu --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --with-platform=efi --enable-stack-protector
+$DEBUG make -j "$CPUS"
+$DEBUG make -j "$CPUS" windowszip
+$DEBUG make -j "$CPUS" distclean
+
+$DEBUG ./configure --build=x86_64-linux-gnu --host=i686-w64-mingw32 --target=i686-w64-mingw32 --with-platform=efi --enable-stack-protector
+$DEBUG make -j "$CPUS"
+$DEBUG make -j "$CPUS" windowszip
+$DEBUG make -j "$CPUS" distclean
+
+$DEBUG ./configure --build=x86_64-linux-gnu --host=i686-w64-mingw32 --target=i686-w64-mingw32 --with-platform=pc
+$DEBUG make -j "$CPUS"
+$DEBUG make -j "$CPUS" windowszip
+$DEBUG make -j "$CPUS" distclean

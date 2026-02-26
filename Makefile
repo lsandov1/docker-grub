@@ -1,4 +1,4 @@
-all: debian-bookworm
+all: debian-trixie
 
 debian-trixie: debian-trixie.m4
 	m4 $^ > $@-Containerfile

@@ -29,6 +29,13 @@ flex \
 fonts-dejavu-core \
 g++ \
 gawk \
+gcc-aarch64-linux-gnu \
+gcc-arm-linux-gnueabihf \
+gcc-mips-linux-gnu \
+gcc-mipsel-linux-gnu \
+gcc-powerpc64-linux-gnu \
+gcc-riscv64-linux-gnu \
+gcc-sparc64-linux-gnu \
 genromfs \
 gettext \
 git \
@@ -45,6 +52,8 @@ libtasn1-6-dev \
 locales \
 lzop \
 make \
+mingw-w64 \
+mingw-w64-tools \
 mtools \
 multitee \
 nilfs-tools \

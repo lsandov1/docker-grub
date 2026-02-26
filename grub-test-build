@@ -1,9 +1,5 @@
 #!/bin/sh -e
 
-if [ -n $DEBUG ]; then
-   DEBUG=echo
-fi
-
 CROSS_C=/usr/local/lib/gcc-12.2.0-nolibc
 
 PATH="$CROSS_C/ia64-linux/bin:$CROSS_C/loongarch64-linux/bin:$CROSS_C/riscv32-linux/bin:$PATH"
@@ -35,9 +31,9 @@ x86_64_PLATFORMS='efi emu xen'
 #
 
 if [ -f ./configure ]; then
-  $DEBUG make -j "$CPUS" distclean || :
+  make -j "$CPUS" distclean || :
 else
-  $DEBUG ./bootstrap
+  ./bootstrap
 fi
 
 for i in $TARGETS; do
@@ -45,26 +41,26 @@ for i in $TARGETS; do
   eval P="\"\$${P}_PLATFORMS\""
   for j in $P; do
     if [ "$j" = efi ] && [ "$i" != ia64-linux ] && [ "$i" != loongarch64-linux ] && [ "$i" != riscv64-linux-gnu ]; then
-      $DEBUG ./configure --target="$i" --with-platform="$j" --enable-stack-protector --enable-grub-mkfont --prefix="$(pwd)/grub-dist"
+      ./configure --target="$i" --with-platform="$j" --enable-stack-protector --enable-grub-mkfont --prefix="$(pwd)/grub-dist"
     else
-      $DEBUG ./configure --target="$i" --with-platform="$j" --enable-grub-mkfont --prefix="$(pwd)/grub-dist"
+      ./configure --target="$i" --with-platform="$j" --enable-grub-mkfont --prefix="$(pwd)/grub-dist"
     fi
-    $DEBUG make -j "$CPUS" install
-    $DEBUG make -j "$CPUS" distclean
+    make -j "$CPUS" install
+    make -j "$CPUS" distclean
   done
 done
 
-$DEBUG ./configure --build=x86_64-linux-gnu --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --with-platform=efi --enable-stack-protector
-$DEBUG make -j "$CPUS"
-$DEBUG make -j "$CPUS" windowszip
-$DEBUG make -j "$CPUS" distclean
+./configure --build=x86_64-linux-gnu --host=x86_64-w64-mingw32 --target=x86_64-w64-mingw32 --with-platform=efi --enable-stack-protector
+make -j "$CPUS"
+make -j "$CPUS" windowszip
+make -j "$CPUS" distclean
 
-$DEBUG ./configure --build=x86_64-linux-gnu --host=i686-w64-mingw32 --target=i686-w64-mingw32 --with-platform=efi --enable-stack-protector
-$DEBUG make -j "$CPUS"
-$DEBUG make -j "$CPUS" windowszip
-$DEBUG make -j "$CPUS" distclean
+./configure --build=x86_64-linux-gnu --host=i686-w64-mingw32 --target=i686-w64-mingw32 --with-platform=efi --enable-stack-protector
+make -j "$CPUS"
+make -j "$CPUS" windowszip
+make -j "$CPUS" distclean
 
-$DEBUG ./configure --build=x86_64-linux-gnu --host=i686-w64-mingw32 --target=i686-w64-mingw32 --with-platform=pc
-$DEBUG make -j "$CPUS"
-$DEBUG make -j "$CPUS" windowszip
-$DEBUG make -j "$CPUS" distclean
+./configure --build=x86_64-linux-gnu --host=i686-w64-mingw32 --target=i686-w64-mingw32 --with-platform=pc
+make -j "$CPUS"
+make -j "$CPUS" windowszip
+make -j "$CPUS" distclean

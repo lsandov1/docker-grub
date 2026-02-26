@@ -2,11 +2,11 @@ all: debian-trixie
 
 debian-trixie: debian-trixie.m4
 	m4 $^ > $@-Containerfile
-	podman build -t $@-grub -f $@-Containerfile .
-	podman run -it $@-grub
+	docker build -t $@-grub -f $@-Containerfile .
+	docker run -it $@-grub
 
 debian-bookworm: debian-bookworm.m4
 	m4 $^ > $@-Containerfile
-	podman build -t $@-grub -f $@-Containerfile .
-	podman run -it $@-grub
+	docker build -t $@-grub -f $@-Containerfile .
+	docker  run -it $@-grub
 

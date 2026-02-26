@@ -81,6 +81,5 @@ xz-utils \
 zfs-fuse
 RUN git clone --depth 1 https://git.savannah.gnu.org/git/grub.git /grub
 
-WORKDIR /grub
 COPY grub-test-build .
 RUN chmod +x grub-test-build

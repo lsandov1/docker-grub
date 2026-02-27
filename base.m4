@@ -7,3 +7,9 @@ dnl
 dnl // PKG general macros
 define(`PKG_MNG_UPDATE_ARGS', `update -y')dnl
 define(`PKG_MNG_INSTALL_ARGS', `install -y')dnl
+dnl
+dnl // More cross compiling toolchains from https://mirrors.kernel.org/pub/tools/crosstool/
+define(`CROSS_C_DIR', `/usr/local/lib/gcc-13.2.0-nolibc')
+define(`CROSS_C_IA64_LINUX',        `https://mirrors.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.2.0/x86_64-gcc-13.2.0-nolibc-ia64-linux.tar.gz')dnl
+define(`CROSS_C_LOONGARCH64_LINUX', `https://mirrors.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.2.0/x86_64-gcc-13.2.0-nolibc-loongarch64-linux.tar.gz')dnl
+define(`CROSS_C_RISCV32_LINUX',     `https://mirrors.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.2.0/x86_64-gcc-13.2.0-nolibc-riscv32-linux.tar.gz')dnl

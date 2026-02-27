@@ -9,5 +9,5 @@ debian-bookworm: debian-bookworm.m4
 	docker build -t $@-grub -f $@-Containerfile .
 
 run: debian-trixie
-	docker run -it $@-grub
+	docker run -it $^-grub
 

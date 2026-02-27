@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-CROSS_C=/usr/local/lib/gcc-12.2.0-nolibc
-
 PATH="$CROSS_C/ia64-linux/bin:$CROSS_C/loongarch64-linux/bin:$CROSS_C/riscv32-linux/bin:$PATH"
 
 : ${CPUS:=$(getconf _NPROCESSORS_ONLN 2> /dev/null || echo 1)}

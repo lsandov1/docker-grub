@@ -1,7 +1,9 @@
 
 
+
 FROM debian:bookworm
 
+# Package installation
 RUN apt update -y
 RUN apt install -y \
 attr \
@@ -79,8 +81,19 @@ xfsprogs \
 xorriso \
 xz-utils \
 zfs-fuse
+
+# Extra cross-compiler download & untar
+ENV CROSS_C=/usr/local/lib/gcc-13.2.0-nolibc
+RUN mkdir -p /usr/local/lib && \
+    cd /usr/local/lib && \
+    wget -q https://mirrors.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.2.0/x86_64-gcc-13.2.0-nolibc-ia64-linux.tar.gz && \
+    wget -q https://mirrors.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.2.0/x86_64-gcc-13.2.0-nolibc-loongarch64-linux.tar.gz && \
+    wget -q https://mirrors.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.2.0/x86_64-gcc-13.2.0-nolibc-riscv32-linux.tar.gz && \
+    for f in *.tar.gz; do tar -xzf "$f"; done
+
+# Clone GRUB, not required for CI but perhaps useful for local testing
 RUN git clone --depth 1 https://git.savannah.gnu.org/git/grub.git /grub
 
-WORKDIR /grub
+# CI serial build script
 COPY grub-test-build .
 RUN chmod +x grub-test-build
